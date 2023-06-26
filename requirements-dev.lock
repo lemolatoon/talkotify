@@ -7,3 +7,7 @@
 #   all-features: false
 
 -e file:.
+mypy==1.4.1
+mypy-extensions==1.0.0
+python-dotenv==1.0.0
+typing-extensions==4.6.3
