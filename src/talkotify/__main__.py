@@ -3,7 +3,7 @@ from io import BytesIO
 import openai
 from talkotify.microphone import get_audio_from_mic
 from .env import OPENAI_API_KEY, init_env, checked_get
-from .spotify import get_device_id, play
+from .spotify import get_device_id, play, search
 
 
 openai.api_key = OPENAI_API_KEY
@@ -19,7 +19,8 @@ def run():
     # text = voice_to_text()
     # print(text)
     device_id = get_device_id()
-    # play()
+    uris = search("YOASOBI")
+    play(device_id, uris[0])
     print("hoy!")
 
 if __name__ == "__main__":

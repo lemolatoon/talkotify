@@ -13,7 +13,18 @@ client = spotipy.Spotify(client_credentials_manager=client_credentials_manager, 
 def get_device_id() -> str:
     print("get devices")
     devices = client.devices()
-    return devices[0]["id"]
+    return devices["devices"][0]["id"]
 
 def play(device_id: str, uri: str):
-    client.start_playback(device_id, uri)
+    client.start_playback(device_id, uris=[uri])
+
+def search(query: str):
+    result = client.search(query, market="JP")
+
+    items = result["tracks"]["items"]
+
+    def uri(item):
+        id = item["id"]
+        return f"spotify:track:{id}"
+    uris = list(map(uri, items))
+    return uris
