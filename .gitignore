@@ -162,3 +162,4 @@ cython_debug/
 
 # environment file
 .env
+.cache*

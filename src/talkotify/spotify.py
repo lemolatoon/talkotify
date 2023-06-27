@@ -1,3 +1,4 @@
+from typing import List
 import spotipy
 import spotipy.util as util
 from talkotify.env import SPOTIFY_API_CLIENT_ID, SPOTIFY_API_SECRET, SPOTIFY_USERNAME
@@ -18,6 +19,9 @@ def get_device_id() -> str:
 def play(device_id: str, uri: str):
     client.start_playback(device_id, uris=[uri])
 
+def get_available_genres():
+    return client.recommendation_genre_seeds()
+
 def search(query: str):
     result = client.search(query, market="JP")
 
@@ -29,16 +33,43 @@ def search(query: str):
     uris = list(map(uri, items))
     return uris
 
+def search_by_genres(genres: str):
+    return search(f"genre:{genres}")
+
 functions = [
     {
-        "name": "search_songs",
-        "description": "search song by query using spotify API",
+        "name": "get_available_genres",
+        "description": "Retrieve a list of available genres seed parameter values",
+        "parameters": {
+            "type": "object",
+            "properties": {
+            },
+            "required": []
+        }
+    },
+    {
+        "name": "search_by_genres",
+        "description": "search song by genres using spotify API",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "genres": {
+                    "type": "string",
+                    "description": "comma separated genres, which is array of genres. genres must be included in return list of `get_available_genres`. You should specify multiple genres."
+                }
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "name": "search_by_name",
+        "description": "search song by name using spotify API",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "query of this function"
+                    "description": "name of song"
                 }
             },
             "required": ["query"]
@@ -52,7 +83,7 @@ functions = [
             "properties": {
                 "id": {
                     "type": "string",
-                    "description": "id of the song"
+                    "description": "id of the song. The base-62 identifier found at the end of the Spotify URI (see above) for an artist, track, album, playlist, etc. Unlike a Spotify URI, a Spotify ID does not clearly identify the type of resource; that information is provided elsewhere in the call. This argument must start `spotify:`"
                 }
             },
             "required": ["id"]

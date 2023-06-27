@@ -5,7 +5,7 @@ import sys
 import openai
 from talkotify.microphone import get_audio_from_mic
 from .env import OPENAI_API_KEY, init_env, checked_get
-from .spotify import get_device_id, play, search, functions
+from .spotify import get_available_genres, get_device_id, play, search, functions, search_by_genres
 
 
 openai.api_key = OPENAI_API_KEY
@@ -25,6 +25,7 @@ def run():
     # AIが質問に対して使う関数と、その時に必要な引数を決める
     # 特に関数を使う必要がなければ普通に質問に回答する
     messages = [
+        {"role": "system", "content": "You are an AI assistant, which search songs and play suitable song for user."},
         {"role": "user", "content": question}
     ]
     while True:
@@ -46,24 +47,54 @@ def run():
             function_name = message["function_call"]["name"]
             # その時の引数dict
             arguments = json.loads(message["function_call"]["arguments"])
+            print(arguments)
 
             # 2段階目の処理
             # 関数の実行
-            if function_name == "play":
+            if function_name == "play_song":
+                print("play: ", arguments["id"])
                 play(
                     device_id=device_id,
                     uri=arguments.get("id"),
                 )
                 break
-            else:
-                function_response = search(
-                    query=arguments.get("query")
-                )
+            elif function_name == "get_available_genres":
+                function_response = get_available_genres()
+                print(function_response)
                 messages.append(
                         {
                             "role": "function",
                             "name": function_name,
-                            "content": function_response,
+                            "content": json.dumps(function_response),
+                        },
+
+                )
+                continue
+            elif function_name == "search_by_genres":
+                function_response = search_by_genres(
+                    genres=arguments.get("genres")
+                )
+                print(function_response)
+                messages.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": json.dumps(function_response),
+                        },
+
+                )
+                continue
+            else:
+                print("query: ", arguments["query"])
+                function_response = search(
+                    query=arguments.get("query")
+                )
+                print(function_response)
+                messages.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": json.dumps(function_response),
                         },
 
                 )
