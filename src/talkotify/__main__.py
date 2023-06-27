@@ -1,9 +1,11 @@
 from io import BytesIO
+import json
+import sys
 
 import openai
 from talkotify.microphone import get_audio_from_mic
 from .env import OPENAI_API_KEY, init_env, checked_get
-from .spotify import get_device_id, play, search
+from .spotify import get_device_id, play, search, functions
 
 
 openai.api_key = OPENAI_API_KEY
@@ -16,11 +18,58 @@ def voice_to_text() -> str:
 
 def run():
     init_env()
-    # text = voice_to_text()
-    # print(text)
+    question = voice_to_text()
+    print(question)
     device_id = get_device_id()
-    uris = search("YOASOBI")
-    play(device_id, uris[0])
+    # 1段階目の処理
+    # AIが質問に対して使う関数と、その時に必要な引数を決める
+    # 特に関数を使う必要がなければ普通に質問に回答する
+    messages = [
+        {"role": "user", "content": question}
+    ]
+    while True:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-0613",
+            messages=messages,
+            functions=functions,
+            function_call="auto",
+        )
+        print(json.dumps(response), file=sys.stderr)
+
+        message = response["choices"][0]["message"]
+        print(message)
+        messages.append(message)
+        if message.get("function_call"):
+            # 関数を使用すると判断された場合
+
+            # 使うと判断された関数名
+            function_name = message["function_call"]["name"]
+            # その時の引数dict
+            arguments = json.loads(message["function_call"]["arguments"])
+
+            # 2段階目の処理
+            # 関数の実行
+            if function_name == "play":
+                play(
+                    device_id=device_id,
+                    uri=arguments.get("id"),
+                )
+                break
+            else:
+                function_response = search(
+                    query=arguments.get("query")
+                )
+                messages.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": function_response,
+                        },
+
+                )
+                continue
+        print("dame")
+        break
     print("hoy!")
 
 if __name__ == "__main__":

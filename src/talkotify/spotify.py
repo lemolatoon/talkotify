@@ -28,3 +28,34 @@ def search(query: str):
         return f"spotify:track:{id}"
     uris = list(map(uri, items))
     return uris
+
+functions = [
+    {
+        "name": "search_songs",
+        "description": "search song by query using spotify API",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "query of this function"
+                }
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "name": "play_song",
+        "description": "play song by id got by `search songs`",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "id of the song"
+                }
+            },
+            "required": ["id"]
+        }
+    }
+]
