@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
+
 def init_env() -> None:
     load_dotenv(verbose=True)
     
@@ -18,3 +19,9 @@ def checked_get(key: str) -> str:
         print(f"{key} is None", file=sys.stderr)
         sys.exit(1)
     return var
+
+init_env()
+OPENAI_API_KEY: str = checked_get("OPENAI_API_KEY")
+SPOTIFY_API_CLIENT_ID: str = checked_get("SPOTIFY_CLIENT_ID")
+SPOTIFY_API_SECRET: str = checked_get("SPOTIFY_CLIENT_SECRET")
+SPOTIFY_USERNAME: str = checked_get("SPOTIFY_USERNAME")
