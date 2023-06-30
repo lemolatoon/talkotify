@@ -119,5 +119,5 @@ def raspi_run():
 
 
 if __name__ == "__main__":
-    # run()
-    raspi_run()
+    run()
+    # raspi_run()

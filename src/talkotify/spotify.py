@@ -11,9 +11,16 @@ token = util.prompt_for_user_token(SPOTIPY_USERNAME, scope)
 client_credentials_manager = spotipy.oauth2.SpotifyClientCredentials(SPOTIPY_API_CLIENT_ID, SPOTIPY_API_SECRET)
 client = spotipy.Spotify(client_credentials_manager=client_credentials_manager, auth=token)
 
+cached = None
 def get_device_id() -> str:
+    if cached is not None:
+        return cached
     print("get devices")
     devices = client.devices()
+    for device in devices["devices"]:
+        if device["name"] == "raspotify (raspberrypi)":
+            cached = device["id"]
+            return device["id"]
     return devices["devices"][0]["id"]
 
 def play(device_id: str, uri: str):
