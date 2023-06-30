@@ -22,6 +22,6 @@ def checked_get(key: str) -> str:
 
 init_env()
 OPENAI_API_KEY: str = checked_get("OPENAI_API_KEY")
-SPOTIFY_API_CLIENT_ID: str = checked_get("SPOTIFY_CLIENT_ID")
-SPOTIFY_API_SECRET: str = checked_get("SPOTIFY_CLIENT_SECRET")
-SPOTIFY_USERNAME: str = checked_get("SPOTIFY_USERNAME")
+SPOTIPY_API_CLIENT_ID: str = checked_get("SPOTIPY_CLIENT_ID")
+SPOTIPY_API_SECRET: str = checked_get("SPOTIPY_CLIENT_SECRET")
+SPOTIPY_USERNAME: str = checked_get("SPOTIPY_USERNAME")

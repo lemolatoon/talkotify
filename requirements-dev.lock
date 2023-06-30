@@ -13,6 +13,7 @@ async-timeout==4.0.2
 attrs==23.1.0
 certifi==2023.5.7
 charset-normalizer==3.1.0
+colorama==0.4.6
 frozenlist==1.3.3
 idna==3.4
 multidict==6.0.4
@@ -21,8 +22,11 @@ mypy-extensions==1.0.0
 openai==0.27.8
 pyaudio==0.2.13
 python-dotenv==1.0.0
+redis==4.6.0
 requests==2.31.0
+six==1.16.0
 speechrecognition==3.10.0
+spotipy==2.23.0
 tqdm==4.65.0
 typing-extensions==4.6.3
 urllib3==2.0.3

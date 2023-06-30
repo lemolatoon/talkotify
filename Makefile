@@ -5,3 +5,5 @@ setup:
 	
 run:
 	python3 -m talkotify
+runr:
+	cd src && rye run python -m talkotify
