@@ -17,7 +17,6 @@ def voice_to_text() -> str:
     return transcript['text']
 
 def run():
-    init_env()
     question = voice_to_text()
     print(question)
     device_id = get_device_id()
@@ -100,8 +99,25 @@ def run():
                 )
                 continue
         print("dame")
+        print(message["content"])
         break
     print("hoy!")
+def raspi_run():
+    import RPi.GPIO
+    RPi.GPIO.setmode(RPi.GPIO.BCM)
+    RPi.GPIO.setup(18, RPi.GPIO.IN)
+    print("Press button to talk to play a song")
+
+    while True:
+        if RPi.GPIO.input(18) != RPi.GPIO.LOW:
+            # HIGH
+            try:
+                run()
+            except Exception as e:
+                print(e)
+            print("Press button to talk to play a song")
+
 
 if __name__ == "__main__":
-    run()
+    # run()
+    raspi_run()
