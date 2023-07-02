@@ -13,6 +13,7 @@ client = spotipy.Spotify(client_credentials_manager=client_credentials_manager, 
 
 cached = None
 def get_device_id() -> str:
+    global cached
     if cached is not None:
         return cached
     print("get devices")
