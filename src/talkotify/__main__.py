@@ -6,6 +6,7 @@ import openai
 from talkotify.microphone import get_audio_from_mic
 from .env import OPENAI_API_KEY, init_env, checked_get
 from .spotify import get_available_genres, get_device_id, play, search, functions, search_by_genres
+from .google import search_by_google
 
 
 openai.api_key = OPENAI_API_KEY
@@ -119,5 +120,5 @@ def raspi_run():
 
 
 if __name__ == "__main__":
-    # run()
-    raspi_run()
+    run()
+    # raspi_run()
