@@ -57,6 +57,7 @@ def run():
                 )
                 break
             elif function_name == "get_available_genres":
+                print(f"calling get_available_genres of spotify API")
                 function_response = get_available_genres()
                 messages.append(
                         {
@@ -71,7 +72,7 @@ def run():
                 genres = arguments.get("genres")
                 print(f"using spotify genre search: {genres}")
                 function_response = search_by_genres(
-                    genres=genres
+                    genres=",".join(genres)
                 )
                 messages.append(
                         {
@@ -118,5 +119,5 @@ def raspi_run():
 
 
 if __name__ == "__main__":
-    run()
-    # raspi_run()
+    # run()
+    raspi_run()

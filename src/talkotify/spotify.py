@@ -61,8 +61,11 @@ functions = [
             "type": "object",
             "properties": {
                 "genres": {
-                    "type": "string",
-                    "description": "comma separated genres, which is array of genres. genres must be included in return list of `get_available_genres`. You should specify multiple genres."
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "genres which is array of genres. genres **must** be included in return list of `get_available_genres`. You must specify **more than three** genres."
                 }
             },
             "required": ["query"]
