@@ -19,8 +19,9 @@ def voice_to_text() -> str:
 
 def run():
     question = voice_to_text()
-    print(question)
+    print(f"user query: {question}")
     device_id = get_device_id()
+    print(f"device_id: {device_id}")
     # 1段階目の処理
     # AIが質問に対して使う関数と、その時に必要な引数を決める
     # 特に関数を使う必要がなければ普通に質問に回答する
@@ -35,10 +36,8 @@ def run():
             functions=functions,
             function_call="auto",
         )
-        print(json.dumps(response), file=sys.stderr)
 
         message = response["choices"][0]["message"]
-        print(message)
         messages.append(message)
         if message.get("function_call"):
             # 関数を使用すると判断された場合
@@ -47,7 +46,6 @@ def run():
             function_name = message["function_call"]["name"]
             # その時の引数dict
             arguments = json.loads(message["function_call"]["arguments"])
-            print(arguments)
 
             # 2段階目の処理
             # 関数の実行
@@ -60,7 +58,6 @@ def run():
                 break
             elif function_name == "get_available_genres":
                 function_response = get_available_genres()
-                print(function_response)
                 messages.append(
                         {
                             "role": "function",
@@ -71,10 +68,11 @@ def run():
                 )
                 continue
             elif function_name == "search_by_genres":
+                genres = arguments.get("genres")
+                print(f"using spotify genre search: {genres}")
                 function_response = search_by_genres(
-                    genres=arguments.get("genres")
+                    genres=genres
                 )
-                print(function_response)
                 messages.append(
                         {
                             "role": "function",
@@ -85,11 +83,11 @@ def run():
                 )
                 continue
             else:
-                print("query: ", arguments["query"])
+                query = arguments.get("query")
+                print(f"using spotify search: {query}")
                 function_response = search(
-                    query=arguments.get("query")
+                    query=query
                 )
-                print(function_response)
                 messages.append(
                         {
                             "role": "function",
@@ -102,7 +100,7 @@ def run():
         print("dame")
         print(message["content"])
         break
-    print("hoy!")
+
 def raspi_run():
     import RPi.GPIO
     RPi.GPIO.setmode(RPi.GPIO.BCM)

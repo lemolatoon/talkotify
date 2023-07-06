@@ -16,7 +16,6 @@ def get_device_id() -> str:
     global cached
     if cached is not None:
         return cached
-    print("get devices")
     devices = client.devices()
     for device in devices["devices"]:
         if device["name"] == "raspotify (raspberrypi)":
